@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="articleNamespace">
+
+    <resultMap type="com.zcc.MyWebsite.entity.ArticleType" id="artTypeMap">
+        <id property="id" column="id"/>
+        <result property="typeName" column="name"/>
+    </resultMap>
+
+    <resultMap id="artMap" type="com.zcc.MyWebsite.entity.Article">
+        <id property="id" column="id"/>
+        <id property="title" column="title"/>
+        <id property="content" column="content"/>
+        <id property="posttime" column="posttime"/>
+        <id property="originurl" column="originurl"/>
+        <id property="sourcesite" column="sourcesite"/>
+    </resultMap>
+
+    <!-- 增加类别 -->
+    <insert id="add" parameterType="com.zcc.MyWebsite.entity.ArticleType">
+        insert into articletype(name) values(#{name});
+    </insert>
+    <!-- 查找所有的类别 -->
+    <select id="findAll" resultMap="artTypeMap">
+        SELECT id,name FROM articletype;
+    </select>
+    <!-- 简单查询出对应类型的所有文章的基本信息 -->
+    <select id="findArticleInfo" parameterType="int" resultMap="artMap">
+        SELECT id,title,contenttype,posttime FROM article WHERE contenttype=#{xxx};
+    </select>
+    <!-- 查询出指定文章的具体内容 -->
+    <select id="findArticle" parameterType="int" resultMap="artMap">
+        SELECT id,title,content,contenttype,posttime,originurl,sourcesite FROM article WHERE id=#{id}
+    </select>
+    <!-- 查询出指定文章的数量 -->
+    <select id="findArticlesCount" parameterType="int" resultType="int">
+        SELECT COUNT(id) FROM article WHERE contenttype=#{xxx};
+    </select>
+    <!-- 查询出指定页的文章数据 -->
+    <select id="findArticlesByPage" parameterType="map" resultMap="artMap">
+        SELECT id,title,content,contenttype,posttime,originurl,sourcesite FROM article WHERE contenttype=#{typeid} limit #{index},#{pagesize};
+    </select>
+
+</mapper>
